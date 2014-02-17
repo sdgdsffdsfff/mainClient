@@ -1,0 +1,72 @@
+<?xml version="1.0" encoding="utf-8"?>
+<common:ModuleBase xmlns:fx="http://ns.adobe.com/mxml/2009" 
+				   xmlns:s="library://ns.adobe.com/flex/spark" 
+				   xmlns:mx="library://ns.adobe.com/flex/mx" xmlns:common="com.cjx.views.common.*" width="400" height="500"
+				   creationComplete="creationCompleteHandler()">
+	
+	<fx:Script>
+		<![CDATA[
+			import com.cjx.event.EventName;
+			import com.cjx.event.MyDataEvent;
+			import com.cjx.mvc.view.mediator.Module.SearchModuleMediator;
+			import com.cjx.mvc.view.mediator.PatentInfoPanelMediator;
+			
+			import mx.collections.ArrayCollection;
+			import mx.controls.Alert;
+			import mx.events.ListEvent;
+			
+			import org.puremvc.as3.patterns.facade.Facade;
+			
+			
+			private function creationCompleteHandler():void
+			{
+				this.title = "专利查询模块";
+				Facade.getInstance().registerMediator(new SearchModuleMediator(this));
+			}
+			
+			private function search():void
+			{
+				var obj:Object = new Object();
+				obj.keyWord = keyWord.text;
+				this.dispatchEvent(new MyDataEvent(EventName.PATTEN_SEARCH,obj));
+			}
+			
+			public function setResult(value:ArrayCollection):void
+			{
+				patentsDataGrid.dataProvider = value;
+				resultCount.text = "查询结果：" + value.length + "条";
+			}
+			
+			private function onItemDoubleClick(e:ListEvent):void
+			{
+				var p:Point = this.contentToGlobal(new Point(this.contentMouseX,this.contentMouseY));
+				var pm:PatentInfoPanelMediator = Facade.getInstance().retrieveMediator(PatentInfoPanelMediator.NAME) as PatentInfoPanelMediator;
+				pm.view.setPatentData(e.itemRenderer.data);
+				pm.show(p.x,p.y);
+			}
+		]]>
+	</fx:Script>
+	
+	<common:layout>
+		<s:BasicLayout/>
+	</common:layout>
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+	
+	<s:VGroup width="100%" height="100%" left="10" right="10" top="37" bottom="15" horizontalAlign="center">
+		<s:HGroup width="100%" verticalAlign="middle" horizontalAlign="center">
+			<s:Label text="专利查询"/>
+			<s:TextInput id="keyWord" width="120" enter="search()"/>
+			<s:Button label="查询" click="search()"/>
+		</s:HGroup>
+		<s:Label id="resultCount"/>
+		<mx:DataGrid id="patentsDataGrid" width="100%" height="100%" doubleClickEnabled="true" itemDoubleClick="onItemDoubleClick(event)">
+			<mx:columns>
+				<mx:DataGridColumn dataField="pttNum" headerText="专利号" width="100"/>
+				<mx:DataGridColumn dataField="pttName" headerText="专利名称"/>
+			</mx:columns>
+		</mx:DataGrid>
+	</s:VGroup>
+	
+</common:ModuleBase>

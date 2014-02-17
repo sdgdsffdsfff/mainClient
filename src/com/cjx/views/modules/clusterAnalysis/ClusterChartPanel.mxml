@@ -1,0 +1,165 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 preinitialize="preinit()"
+		 creationComplete="creationCompleteHandler()">
+
+	<fx:Script>
+		<![CDATA[
+			import com.cjx.event.ConstDefine;
+			import com.cjx.event.EventName;
+			import com.cjx.event.MyDataEvent;
+			import com.cjx.mvc.view.mediator.PatentInfoPanelMediator;
+			import com.cjx.net.RemoteObjectManager;
+			
+			import mx.charts.CategoryAxis;
+			import mx.charts.HitData;
+			import mx.charts.LinearAxis;
+			import mx.charts.chartClasses.IAxis;
+			import mx.charts.events.ChartItemEvent;
+			import mx.collections.ArrayCollection;
+			import mx.events.ListEvent;
+			
+			import org.puremvc.as3.patterns.facade.Facade;
+			
+			[Bindable]private var expensesAC:ArrayCollection = new ArrayCollection( [
+				{ Month: "Jan", Profit: 1, Expenses: 5, Amount: 2 },
+				{ Month: "Feb", Profit: 3, Expenses: 10, Amount: 4 },
+				{ Month: "Mar", Profit: 5, Expenses: 15, Amount: 3 },
+				{ Month: "Apr", Profit: 2, Expenses: 20, Amount: 1 },
+				{ Month: "May", Profit: 4, Expenses: 25, Amount: 5 } ]);
+			
+			private function preinit():void
+			{
+				
+			}
+			
+			private function creationCompleteHandler():void
+			{
+				
+			}
+			
+			public function set chartDataprovider(value:ArrayCollection):void
+			{
+				bubblechart.dataProvider = value;
+			}
+			
+			private function onItemDoubleClick(e:ChartItemEvent):void
+			{
+				var item:Object = e.hitData.item;
+				this.dispatchEvent(new MyDataEvent(EventName.CLUSTER_ITEM_DOUBLECLICK,item,true));
+			}
+			
+			private function onMouseOut(e:MouseEvent):void
+			{
+				if(!resultList.hitTestPoint(e.stageX,e.stageY))
+					resultList.visible = false;
+			}
+			
+			private function onListItemDoubleClick(e:ListEvent):void
+			{
+				var p:Point = this.contentToGlobal(new Point(this.contentMouseX,this.contentMouseY));
+				var pm:PatentInfoPanelMediator = Facade.getInstance().retrieveMediator(PatentInfoPanelMediator.NAME) as PatentInfoPanelMediator;
+				pm.view.setPatentData(e.itemRenderer.data);
+				pm.show(p.x,p.y);
+			}
+			
+			private function bubbleChartDataTipFunc(data:HitData):String
+			{
+				var tip:String = "";
+				tip += "PCI(y)=" + getPttClassByInt(data.item["pttClass"]) + "\n";
+				tip += "cluster(x)=" + data.item["cluster"] + "\n";
+				tip += "专利数量：" + data.item["count"] + "个"
+				return tip;
+			}
+			
+			private function verAxisLabelFun(labelvalue:Object,previousvalue:Object,axis:IAxis):String
+			{
+				switch(labelvalue)
+				{
+					case 1:
+						return "G06Q10/00";
+						break;
+					case 2:
+						return "G06Q20/00";
+						break;
+					case 3:
+						return "G06Q30/00";
+						break;
+					case 4:
+						return "G06Q40/00";
+						break;
+					case 5:
+						return "G06Q50/00";
+						break;
+					case 6:
+						return "G06Q90/00";
+						break;
+					case 7:
+						return "G06Q99/00";
+						break;
+					
+					default:
+						return "";
+						break;
+				}
+			}
+			
+			private function getPttClassByInt(i:int):String
+			{
+				switch(i)
+				{
+					case 1:
+						return "G06Q10/00";
+					case 2:
+						return "G06Q20/00";
+					case 3:
+						return "G06Q30/00";
+					case 4:
+						return "G06Q40/00";
+					case 5:
+						return "G06Q50/00";
+					case 6:
+						return "G06Q90/00";
+					case 7:
+						return "G06Q99/00";
+					
+					default:
+						return "";
+				}
+			}
+		]]>
+	</fx:Script>
+	
+	<s:layout>
+		<s:BasicLayout/>
+	</s:layout>
+	
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+	
+	<s:BorderContainer borderColor="0xFFF000" borderWeight="2" backgroundAlpha="0.8" backgroundColor="0xFFFFFF" width="500" height="300">
+		
+		<mx:BubbleChart x="10" y="10" id="bubblechart" height="280" width="480" color="0x323232"
+						showDataTips="true" maxRadius="20"  doubleClickEnabled="true" itemDoubleClick="onItemDoubleClick(event)"
+					    dataTipFunction="bubbleChartDataTipFunc">
+			
+			<mx:series>
+				<mx:BubbleSeries displayName="cluster/class/专利数量"
+								 xField="cluster" yField="pttClass" radiusField="count">
+					<!--<mx:verticalAxis>
+					<mx:LinearAxis maximum="8" minimum="0" interval="1" labelFunction="verAxisLabelFun" autoAdjust="true"/>
+					</mx:verticalAxis>-->
+				</mx:BubbleSeries>
+			</mx:series>
+			
+		</mx:BubbleChart>
+		
+	</s:BorderContainer>
+	
+	<mx:List id="resultList" width="150" height="250" labelField="pttName" mouseOut="onMouseOut(event)" visible="false" 
+			  horizontalScrollPolicy="off" doubleClickEnabled="true" itemDoubleClick="onListItemDoubleClick(event)"/> 
+	
+</s:Group>

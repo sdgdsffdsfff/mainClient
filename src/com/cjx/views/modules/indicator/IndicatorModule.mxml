@@ -1,0 +1,117 @@
+<?xml version="1.0" encoding="utf-8"?>
+<indicator:IndicatorModuleBase xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:indicator="com.cjx.views.modules.indicator.*"
+		 xmlns:mx="library://ns.adobe.com/flex/mx" 
+		 creationComplete="creationCompleteHandler()"
+		 width="800" height="440" >
+	
+	<fx:Script>
+		<![CDATA[
+			import com.cjx.event.ConstDefine;
+			import com.cjx.event.EventName;
+			import com.cjx.event.MyDataEvent;
+			import com.cjx.mvc.core.ApplicationFacade;
+			import com.cjx.mvc.view.mediator.Module.IndicatorModuleMediator;
+			
+			import graphite.skins.ComboBoxSkin;
+			import graphite.skins.DropDownListSkin;
+			
+			import mx.collections.ArrayCollection;
+			
+			import org.puremvc.as3.patterns.facade.Facade;
+			
+			import spark.skins.spark.ComboBoxSkin;
+			
+			
+			
+			[Bindable]
+			private var _indicators:ArrayCollection = new ArrayCollection([
+			
+				//{label:"专利增长率",type:ConstDefine.PATENT_GROWTH_RATE},
+				{label:"技术生长率",type:ConstDefine.TECHNICAL_GROWTH_RATE},
+				{label:"技术成熟系数",type:ConstDefine.MATURE_TECHNOLOGY_COEFFICIENT},
+				{label:"技术衰老系数",type:ConstDefine.TECHNOLOGY_AGING_COFFICIENT}
+			]);
+			
+			private function creationCompleteHandler():void
+			{
+				this.title = "指标统计"; 
+				Facade.getInstance().registerMediator(new IndicatorModuleMediator(this));
+			}
+			
+			private function onSubmit():void
+			{
+				var value:IndicatorParam = new IndicatorParam();
+				value.indicatorType = indicatorCombo.selectedItem["type"] as int;
+				value.type = "" + (c1.selected ? "11," : "") + (c2.selected ? "22," : "") + (c3.selected ? "33," : "");
+				value.pttClass = String(patentClassGroup.selection.value);
+				value.keyWord = keyWordInput.text;
+				this.dispatchEvent(new MyDataEvent(EventName.INDICATOR_SUBMIT,value));
+			}
+			
+			public function set dataProvider(value:ArrayCollection):void
+			{
+				chartsPanel.dataProvider = value;
+			}
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+		<s:RadioButtonGroup id="patentClassGroup"/>
+	</fx:Declarations>
+	
+	<s:VGroup top="50" left="15">
+		<s:HGroup>
+			<s:VGroup>
+				<s:HGroup verticalAlign="middle">
+					<s:Label text="指标类型："/>
+					<s:DropDownList id="indicatorCombo" dataProvider="{_indicators}" width="125"
+						 skinClass="graphite.skins.DropDownListSkin" selectedIndex="0"/> 
+				</s:HGroup>
+				<mx:Spacer height="20"/>
+				<s:Label text="专利类型："/>
+				<s:VGroup>
+					<s:CheckBox id="c1" label="发明型专利" selected="true"/>
+					<s:CheckBox id="c2" label="实用新型专利" selected="true"/>
+					<s:CheckBox id="c3" label="外观设计专利" selected="true"/>
+				</s:VGroup>
+				<mx:Spacer height="20"/>
+				<s:Label text="专利分类号：" />
+				<s:HGroup verticalAlign="middle">
+					<s:RadioButton id="r1" label="G06Q10" groupName="patentClassGroup" value="G06Q10/00"
+								   toolTip="行政，例如办公自动化或预定；管理，例如资源或项目管理"/>
+					<s:RadioButton id="r2" label="G06Q20" groupName="patentClassGroup" value="G06Q20/00"
+								   toolTip="支付方案，体系结构或协议"/>
+					<s:RadioButton id="r3" label="G06Q30" groupName="patentClassGroup" value="G06Q30/00"
+								   toolTip="商业，例如行销、购物、签单、拍卖或电子商务"/>
+				</s:HGroup>
+				<s:HGroup verticalAlign="middle">
+					<s:RadioButton id="r4" label="G06Q40" groupName="patentClassGroup" value="G06Q40/00"
+								   toolTip="金融，例如银行业、投资或税务处理；保险，例如，风险分析或养老金"/>
+					<s:RadioButton id="r5" label="G06Q50" groupName="patentClassGroup" value="G06Q50/00"
+								   toolTip="专门适用于特定经营部门的系统或方法"/>
+					<s:RadioButton id="r6" label="G06Q90" groupName="patentClassGroup" value="G06Q90/00"
+								   toolTip="不涉及有意义的数据处理的专门适用于行政、商业、金融、管理、监督或预测用途的系统或方法"/>
+				</s:HGroup>
+				<s:HGroup verticalAlign="middle">
+					<s:RadioButton id="r7" label="G06Q99" groupName="patentClassGroup" value="GO6Q99/00"
+								   toolTip="本小类的其他各组中不包含的技术主题"/>
+					<s:RadioButton id="r8" label="全部" groupName="patentClassGroup" value="all"
+								   toolTip="所有商业方法专利" selected="true"/>
+				</s:HGroup>
+				<mx:Spacer height="15"/>
+				<s:HGroup verticalAlign="middle">
+					<s:Label text="关键词："/>
+					<s:TextInput id="keyWordInput" width="120" enter="onSubmit()"/>
+				</s:HGroup>
+				<mx:Spacer height="25"/>
+				<s:Button label="提交" click="onSubmit()"/>
+			</s:VGroup>
+		</s:HGroup>
+	</s:VGroup>
+	
+	<indicator:ChartsPanel id="chartsPanel" x="260" y="80" />
+	
+</indicator:IndicatorModuleBase>

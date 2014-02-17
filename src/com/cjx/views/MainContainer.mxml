@@ -1,0 +1,55 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:BorderContainer xmlns:fx="http://ns.adobe.com/mxml/2009"
+				   xmlns:s="library://ns.adobe.com/flex/spark"
+				   xmlns:mx="library://ns.adobe.com/flex/mx" width="100%" height="100%" xmlns:views="com.cjx.views.*"
+				   backgroundImageFillMode="scale" backgroundAlpha="0.1" backgroundImage="@Embed('assets/image/bg.png')" 
+				   xmlns:common="com.cjx.views.common.*" creationComplete="creationCompleteHandler()">
+	<s:layout>
+		<s:BasicLayout/>
+	</s:layout>
+	
+	<fx:Script>
+		<![CDATA[
+			import assets.AppConfig;
+			
+			import com.cjx.event.ConstDefine;
+			import com.cjx.event.EventName;
+			import com.cjx.event.MyDataEvent;
+			
+			import mx.collections.ArrayCollection;
+			
+			private function creationCompleteHandler():void
+			{
+				
+			}
+			
+			private function toggleButtonClickHandler(e:MouseEvent):void
+			{
+				var btn:ToggleButton = e.target as ToggleButton;
+				
+				btn.dispatchEvent(new Event(EventName.MAINCONTAINER_BUTTONCLICK,true));
+			}
+			
+			
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+	
+	<s:VGroup top="10" bottom="10" left="20" right="20">
+		<s:HGroup>
+			<s:ToggleButton id="btn1" name="{AppConfig.INDICATOR}" label="指标统计" click="toggleButtonClickHandler(event)" />
+			<s:ToggleButton id="btn2" name="{AppConfig.CLUSTERANALYSIS}" label="聚类分析" click="toggleButtonClickHandler(event)"/>
+			<s:ToggleButton id="btn3" name="{AppConfig.PATENTSEARCH}" label="专利查询" click="toggleButtonClickHandler(event)"/>
+		</s:HGroup>
+		<s:BorderContainer backgroundAlpha="0" width="100%" height="100%">
+			<views:ModuleContainer id="moduleContainer" mouseEnabled="false"/>
+		</s:BorderContainer>
+	</s:VGroup>
+	<common:PatentInfoPanel id="patentInfoPanel" includeInLayout="false" x="-400" y="-500"/>
+	
+	
+</s:BorderContainer>

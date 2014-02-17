@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Application xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" minWidth="955" minHeight="600"
+			   creationComplete="initApp()" xmlns:views="com.cjx.views.*">
+	
+	<fx:Script>
+		<![CDATA[
+			import com.cjx.mvc.core.ApplicationFacade;
+			
+			private var facade:ApplicationFacade = ApplicationFacade.getInstance();
+			
+			private function initApp():void
+			{
+				facade.startup(this);
+			}
+			
+			private function btnClick():void
+			{
+//				var o:Object = new Object();
+//				o.name = "cjx";
+//				o.sex = "man";
+//				var arr:Array = new Array();
+//				arr.push("aaa");
+//				arr.push("bbb");
+//				arr.push("ccc"); 
+//				RemoteObjectManager.getInstance().doCommand(10000,arr);
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<fx:Style source="assets/style.css"/>
+	
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+	
+	<views:MainContainer id="mainContainer" />
+	
+</s:Application>

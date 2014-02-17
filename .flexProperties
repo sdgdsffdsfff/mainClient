@@ -1,0 +1,2 @@
+<?xml version="1.0" encoding="UTF-8" standalone="no"?>
+<flexProperties enableServiceManager="false" flexServerFeatures="4" flexServerType="2" serverContextRoot="patentOLAM" serverRoot="D:/Xampp 1.8.3/tomcat/webapps/patentOLAM" serverRootURL="http://localhost:8080/patentOLAM" toolCompile="true" useServerFlexSDK="false" version="2"/>

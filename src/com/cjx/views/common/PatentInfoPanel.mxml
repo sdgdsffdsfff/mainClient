@@ -1,0 +1,85 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Panel xmlns:fx="http://ns.adobe.com/mxml/2009" 
+			   xmlns:s="library://ns.adobe.com/flex/spark" 
+			   xmlns:mx="library://ns.adobe.com/flex/mx" width="400" height="500"
+			   creationComplete="creationCompleteHandler()" mouseDown="onStartDrag()" mouseUp="this.stopDrag()">
+	<fx:Script>
+		<![CDATA[
+			import com.cjx.event.EventName;
+			
+			
+			public function creationCompleteHandler():void
+			{
+				
+			}
+			
+			public function onStartDrag():void
+			{
+				if(this.contentMouseY < 30)
+				{
+					this.startDrag();
+				}
+			}
+			
+			public function setPatentData(value:Object):void
+			{
+				classNumG06q.text = value["classNumG06q"];
+				inventor.text = (value["inventor"] as String).replace("?","·");
+				pttAbstract.text = value["pttAbstract"];
+				pttDate.text = value["pttDate"];
+				pttName.text = value["pttName"];
+				pttType.text = value["pttType"];
+				pttNum.text = value["pttNum"];
+				
+				switch(value["pttType"])
+				{
+					case "11":
+						pttType.text = "发明型专利";
+						break;
+					case "22":
+						pttType.text = "实用新型专利";
+						break;
+					case "33":
+						pttType.text = "外观设计专利";
+						break;
+				}
+			}
+			
+			private function onClose():void
+			{
+				this.dispatchEvent(new Event(EventName.PATENT_INFOPANEL_HIDE));
+			}
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+	
+	<mx:Form width="400" height="500" backgroundAlpha="0" fontSize="12">
+		<mx:FormItem label="专利名称：">
+			<mx:Text id="pttName" width="280" textAlign="left"/>
+		</mx:FormItem>
+		<mx:FormItem label="专利号：">
+			<mx:Text id="pttNum" width="280" textAlign="left"/>
+		</mx:FormItem>
+		<mx:FormItem label="专利类型：">
+			<mx:Text id="pttType" width="280" textAlign="left"/>
+		</mx:FormItem>
+		<mx:FormItem label="授权日期：">
+			<mx:Text id="pttDate" width="280" textAlign="left"/>
+		</mx:FormItem>
+		<mx:FormItem label="发明人：">
+			<mx:Text id="inventor" width="280" textAlign="left"/>
+		</mx:FormItem>
+		<mx:FormItem label="分类号：">
+			<mx:Text id="classNumG06q" width="280" textAlign="left"/>
+		</mx:FormItem>
+		<mx:FormItem label="摘要：">
+			<mx:TextArea id="pttAbstract" width="280" height="230" textAlign="left"/>
+		</mx:FormItem>
+	</mx:Form>
+	
+	<mx:LinkButton label="隐藏" click="onClose()" right="0" bottom="0"/>
+	
+</s:Panel>

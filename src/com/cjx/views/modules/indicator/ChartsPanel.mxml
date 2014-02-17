@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<s:Group xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark" 
+		 xmlns:mx="library://ns.adobe.com/flex/mx" width="530" height="340">
+
+	<fx:Script>
+		<![CDATA[
+			import mx.collections.ArrayCollection;
+			
+			
+			public function set dataProvider(value:ArrayCollection):void
+			{
+				linechart.dataProvider = value;
+			}
+			
+		]]>
+	</fx:Script>
+	
+	<s:layout>
+		<s:BasicLayout/>
+	</s:layout>
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+	
+	<s:BorderContainer width="510" height="300" borderWeight="2" borderColor="0xFFF000" backgroundAlpha="0.8" backgroundColor="0xFFFFFF">
+		<mx:LineChart id="linechart" color="0x323232" width="490" height="280"
+					  showDataTips="true" left="10" top="10">
+			
+			<mx:horizontalAxis>
+				<mx:CategoryAxis categoryField="year"/>
+			</mx:horizontalAxis>
+			
+			<mx:series>
+				<mx:LineSeries yField="all" form="curve" displayName="所有"/>
+				<mx:LineSeries yField="type11Value" form="curve"/>
+				<mx:LineSeries yField="type22Value" form="curve"/>
+				<mx:LineSeries yField="type33Value" form="curve"/>
+			</mx:series>
+		</mx:LineChart>
+	</s:BorderContainer>
+	
+	
+</s:Group>

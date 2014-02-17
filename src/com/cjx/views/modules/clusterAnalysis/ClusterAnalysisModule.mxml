@@ -1,0 +1,50 @@
+<?xml version="1.0" encoding="utf-8"?>
+<clusterAnalysis:ClusterAnalysisModuleBase xmlns:fx="http://ns.adobe.com/mxml/2009" 
+		 xmlns:s="library://ns.adobe.com/flex/spark"
+		 xmlns:mx="library://ns.adobe.com/flex/mx"
+		 xmlns:clusterAnalysis="com.cjx.views.modules.clusterAnalysis.*"
+		 creationComplete="creationCompleteHandler()"
+		 width="540" height="417">
+	
+	<fx:Script>
+		<![CDATA[
+			import com.cjx.event.EventName;
+			import com.cjx.event.MyDataEvent;
+			import com.cjx.mvc.view.mediator.Module.ClusterAnalysisModuleMediator;
+			
+			import org.puremvc.as3.patterns.facade.Facade;
+			
+			
+			private function creationCompleteHandler():void
+			{
+				this.title = "聚类分析"; 
+				Facade.getInstance().registerMediator(new ClusterAnalysisModuleMediator(this));
+			}
+			
+			private function submit():void
+			{
+				var obj:Object = new Object();
+				obj.keyWord = keyWordInput.text;
+				this.dispatchEvent(new MyDataEvent(EventName.CLUSTER_SUBMIT,obj));
+			}
+		]]>
+	</fx:Script>
+	
+	<fx:Declarations>
+		<!-- 将非可视元素（例如服务、值对象）放在此处 -->
+	</fx:Declarations>
+	
+	<!--<s:BorderContainer x="390" width="130" height="200" borderWeight="5" />-->
+	
+	<s:VGroup left="20" top="45">
+		<s:HGroup verticalAlign="middle">
+			<s:Label text="领域关键词："/>
+			<s:TextInput id="keyWordInput" width="120" enter="submit()"/>
+			<s:Button label="确认" click="submit()"/>
+		</s:HGroup>
+		<mx:Spacer height="20"/>
+		<clusterAnalysis:ClusterChartPanel id="clusterChart"/>
+	</s:VGroup>
+	
+	
+</clusterAnalysis:ClusterAnalysisModuleBase>
